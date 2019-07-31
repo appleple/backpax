@@ -7,6 +7,32 @@
   <title>Document</title>
 </head>
 <body>
-  
+  <style>
+  .parallax {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .parallax p {
+    font-size: 24px;
+    position: relative;
+    z-index: 10;
+    color: #FFF;
+  }
+  .spacer {
+    height: 1000px;
+  }
+  </style>
+  <div class="spacer"></div>
+  <div class="js-parallax parallax" data-img="https://images.unsplash.com/photo-1557486727-b1a680e36e8f?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=900&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=1600">
+    <p>テスト</p>
+  </div>
+  <div class="spacer"></div>
+  <script src="./bundle/pax.js"></script>
+  <script>
+    new Pax('.js-parallax');
+  </script>
 </body>
 </html>

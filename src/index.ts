@@ -1,4 +1,4 @@
-import { getRandomId, getScrollTop } from './util';
+import { getRandomId, getScrollTop, getOffset } from './util';
 
 type Option = {
   speed: "auto" | number
@@ -34,13 +34,13 @@ export default class Pax {
       const id = getRandomId();
       element.dataset.id = id;
       const insert = document.createElement('div');
-      const desktopImg = element.dataset.desktopImg as string;
+      // const desktopImg = element.dataset.desktopImg as string;
       const img = element.dataset.img as string;
       let backgroundImage = img;
       element.insertBefore(insert, null);
-      if (window.innerWidth >= 767) {
-        backgroundImage = desktopImg;
-      }
+      // if (window.innerWidth >= 767) {
+      //   backgroundImage = desktopImg;
+      // }
       insert.style.backgroundImage = `url(${backgroundImage})`;
       this.setImgRatio(element, backgroundImage);
       insert.id = id;
@@ -70,11 +70,11 @@ export default class Pax {
     img.src = image;
   }
   run() {
-    const top = $(window).scrollTop() as number;
+    const top = getScrollTop();
     [].forEach.call(this.elements, (element: HTMLElement) => {
       const id = element.dataset.id as string;
       const insert = document.getElementById(id);
-      const elementOffset = $(element).offset();
+      const elementOffset = getOffset(element);
       if (!insert) {
         return;
       }
