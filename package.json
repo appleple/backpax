@@ -12,6 +12,9 @@
         "np": "np --no-cleanup",
         "deploy": "npm-run-all -s build build:lib test np"
     },
+    "publishConfig": {
+        "access": "public"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/appleple/document-outliner"
