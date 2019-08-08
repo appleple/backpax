@@ -82,7 +82,7 @@ export default class Pax {
         return;
       }
       const offset = elementOffset.top;
-      const ratio = parseInt(element.dataset.ratio as string, 10);
+      const ratio = parseFloat(element.dataset.ratio as string);
       const windowHeight = window.innerHeight;
       const elementHeight = element.offsetHeight;
       const insertHeight = insert.offsetHeight;

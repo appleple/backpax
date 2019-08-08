@@ -1,6 +1,6 @@
 {
     "name": "@appleple/pax-js",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Simple JavaScript Library for Parallax",
     "main": "lib/index.js",
     "type": "lib/index.d.ts",
