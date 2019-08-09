@@ -12,7 +12,5 @@ $ npm install @appleple/pax-js
 ```js
 import Pax from '@appleple/pax-js';
 
-new Pax('.js-parallax', {
-  speed: 100
-});
+new Pax('.js-parallax');
 ```
