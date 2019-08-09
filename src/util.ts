@@ -17,3 +17,21 @@ export const getOffset = (el: HTMLElement) => {
     left: rect.left + getScrollLeft()
   }
 }
+
+export const debounce = (func: () => void, wait: number, immediate: boolean = false) => {
+	let timeout: number | undefined;
+	return () => {
+		let later = () => {
+			timeout = undefined;
+			if (!immediate) {
+        func();
+      }
+		};
+		const callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) {
+      func();
+    }
+	};
+};
