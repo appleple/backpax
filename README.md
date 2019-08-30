@@ -1,10 +1,10 @@
-# pax
-Just a simple parallax library
+# Backpax
+Simple JavaScript Library to add parallax image to `background-image`
 
 ## Install
 
 ```
-$ npm install @appleple/pax-js
+$ npm install backpax --save
 ```
 
 ## Usage
@@ -13,16 +13,16 @@ If you want to add parallax effect to element's background-image
 
 ```html
 <div class="js-parallax parallax" 
-    data-img="https://images.unsplash.com/photo-1557486727-b1a680e36e8f?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=900&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=1600"
-    data-img-767="https://images.unsplash.com/flagged/photo-1565241758499-3bf9d63d9094?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1834&q=80"
-    data-img-1024="https://images.unsplash.com/flagged/photo-1565241758499-3bf9d63d9094?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1834&q=80"
+  data-img="./path/to/default-image"
+  data-img-768="./path/to/image-which-size-is-larger-than-768"
+  data-img-1024="./path/to/image-which-size-is-larger-than-1024"
 >
   <p>テスト</p>
 </div>
 ```
 
 ```js
-import Pax from '@appleple/pax-js';
+import Backpax from 'backpax';
 
-new Pax('.js-parallax');
+new Backpax('.js-parallax');
 ```
