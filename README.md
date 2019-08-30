@@ -7,6 +7,10 @@ Simple JavaScript Library to add parallax image to `background-image`
 $ npm install backpax --save
 ```
 
+## Demo
+
+demo page is [here](https://appleple.github.io/backpax)
+
 ## Usage
 
 If you want to add parallax effect to element's background-image
