@@ -1,4 +1,6 @@
 # Backpax
+
+![](./screenshot.png)
 Simple JavaScript Library to add parallax image to `background-image`
 
 ## Install
