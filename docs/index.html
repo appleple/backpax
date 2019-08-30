@@ -139,6 +139,12 @@
 		.section h3 {
 			font-size: 2rem;
 		}
+
+		@media screen and (max-width: 768px) {
+			.parallax {
+				height: 250px !important;
+			}
+		}
 	</style>
 </head>
 
@@ -197,7 +203,7 @@
 					</p>
 				</div>
 			</section>
-			<section class="hero parallax js-parallax" style="height:400px;" data-img="./demo2.jpg">
+			<section class="hero parallax js-parallax" style="height:400px;" data-img="./demo2.jpg" data-img-768="./demo-sp2.jpg">
 				<h2 class="parallax-title">Demo</h2>
 			</section>
 			<section class="section">
@@ -223,7 +229,7 @@
 			</section>
 
 
-			<section class="hero parallax js-parallax" style="height:400px;" data-img="./demo1.jpg">
+			<section class="hero parallax js-parallax" style="height:400px;" data-img="./demo.jpg" data-img-768="./demo-sp1.jpg">
 				<h2 class="parallax-title">Demo2</h2>
 			</section>
 
@@ -236,8 +242,8 @@
 					<p>Add the following description to the target tag.</p>
 					<pre><code class="html">&lt;div class="js-parallax" 
   data-img="./path/to/default-image"
-  data-img-768="./path/to/image-which-size-is-larger-than-768"
-  data-img-1024="./path/to/image-which-size-is-larger-than-1024"
+  data-img-768="./path/to/image-which-size-is-smaller-than-768"
+  data-img-1024="./path/to/image-which-size-is-smaller-than-1024"
 &gt;
   &lt;p&gt;contents here&lt;/p&gt;
 &lt;/div&gt;</code></pre>
