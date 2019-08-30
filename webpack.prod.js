@@ -4,13 +4,13 @@ const { CheckerPlugin } = require('awesome-typescript-loader');
 module.exports = {
   mode: "production",
   entry: {
-    'pax': './src/index',
+    'backpax': './src/index',
   },
   output: {
     path: path.resolve(__dirname, 'bundle'),
     publicPath: "bundle",
     filename: '[name].js',
-    library: 'Pax',
+    library: 'Backpax',
     libraryExport: "default",
     libraryTarget: 'umd'
   },

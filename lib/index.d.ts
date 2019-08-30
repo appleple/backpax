@@ -1,7 +1,7 @@
 declare type Option = {
     speed: "auto" | number;
 };
-export default class Pax {
+export default class Backpax {
     elements: NodeList;
     options: Option;
     move: number;

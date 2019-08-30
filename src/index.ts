@@ -8,7 +8,7 @@ const defaults = {
   speed: "auto"
 } as Option;
 
-export default class Pax {
+export default class Backpax {
   elements: NodeList;
   options: Option;
   move: number;

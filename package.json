@@ -1,28 +1,28 @@
 {
-  "name": "@appleple/pax-js",
-  "version": "0.0.3",
-  "description": "Simple JavaScript Library for Parallax",
+  "name": "backpax",
+  "version": "1.0.0",
+  "description": "Simple JavaScript Library to add parallax image to background-image",
   "main": "lib/index.js",
   "type": "lib/index.d.ts",
   "scripts": {
     "test": "jest",
     "dev": "webpack-dev-server --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js && cp bundle/backpax.js docs/backpax.js",
     "build:lib": "tsc",
     "np": "np --no-cleanup",
-    "deploy": "npm-run-all -s build build:lib test np"
+    "deploy": "npm-run-all -s build build:lib np"
   },
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/appleple/pax"
+    "url": "https://github.com/appleple/backpax"
   },
   "keywords": [
     "parallax"
   ],
-  "homepage": "https://appleple.github.io/pax",
+  "homepage": "https://appleple.github.io/backpax",
   "author": {
     "name": "steelydylan",
     "email": "hori@appleple.com"
@@ -41,8 +41,5 @@
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10",
     "webpack-merge": "^4.1.5"
-  },
-  "dependencies": {
-    "@types/jquery": "^3.3.28"
   }
 }
