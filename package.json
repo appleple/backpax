@@ -9,7 +9,7 @@
     "dev": "webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js && cp bundle/backpax.js docs/backpax.js",
     "build:lib": "tsc",
-    "np": "np --no-cleanup --no-test",
+    "np": "np --no-cleanup --no-tests",
     "deploy": "npm-run-all -s build build:lib np"
   },
   "publishConfig": {
