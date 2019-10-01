@@ -26,17 +26,17 @@ export default class Backpax {
     } else {
       setInterval(this.run.bind(this), 1000 / 60);
     }
-    window.addEventListener('resize', debounce(() => {
-      [].forEach.call(this.elements, (element: HTMLElement) => {
-        const { id } = element.dataset;
-        if (id) {
-          const insert = document.getElementById(id);
-          if (insert) {
-            this.setBestImg(element, insert);
-          }
-        }
-      });
-    }, 100));
+    // window.addEventListener('resize', debounce(() => {
+    //   [].forEach.call(this.elements, (element: HTMLElement) => {
+    //     const { id } = element.dataset;
+    //     if (id) {
+    //       const insert = document.getElementById(id);
+    //       if (insert) {
+    //         this.setBestImg(element, insert);
+    //       }
+    //     }
+    //   });
+    // }, 100));
   }
   setBestImg(element: HTMLElement, insert: HTMLElement) {
     const width = window.innerWidth;
@@ -93,6 +93,7 @@ export default class Backpax {
       insert.style.backgroundSize = 'cover';
       insert.style.transformStyle = 'preserve-3d';
       insert.style.backfaceVisibility = 'hidden';
+      insert.style.willChange = 'transform';
     });
   }
   setImgRatio(element: HTMLElement, image: string) {
