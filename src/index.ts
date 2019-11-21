@@ -5,7 +5,7 @@ type Option = {
 }
 
 const defaults = {
-  speed: "auto"
+  speed: "auto" //recommend!!
 } as Option;
 
 export default class Backpax {
@@ -21,22 +21,23 @@ export default class Backpax {
     this.options = Object.assign({}, defaults, option);
     this.move = 0;
     this.setup();
-    if (window.requestAnimationFrame) {
-      requestAnimationFrame(this.run.bind(this));
-    } else {
-      setInterval(this.run.bind(this), 1000 / 60);
+    if ("requestAnimationFrame" in window) {
+      requestAnimationFrame(() => {
+        this.run();
+      });
     }
-    // window.addEventListener('resize', debounce(() => {
-    //   [].forEach.call(this.elements, (element: HTMLElement) => {
-    //     const { id } = element.dataset;
-    //     if (id) {
-    //       const insert = document.getElementById(id);
-    //       if (insert) {
-    //         this.setBestImg(element, insert);
-    //       }
-    //     }
-    //   });
-    // }, 100));
+
+    window.addEventListener('resize', debounce(() => {
+      [].forEach.call(this.elements, (element: HTMLElement) => {
+        const { id } = element.dataset;
+        if (id) {
+          const insert = document.getElementById(id);
+          if (insert) {
+            this.setBestImg(element, insert);
+          }
+        }
+      });
+    }, 100));
   }
   setBestImg(element: HTMLElement, insert: HTMLElement) {
     const width = window.innerWidth;
@@ -70,7 +71,10 @@ export default class Backpax {
     if (point) {
       backgroundImage = point.src;
     }
-    insert.style.backgroundImage = `url(${backgroundImage})`;
+    const newBackground = `url(${backgroundImage})`;
+    if (newBackground !== insert.style.backgroundImage) {
+      insert.style.backgroundImage = newBackground;
+    }
     this.setImgRatio(element, backgroundImage);
   }
   setup() {
@@ -86,8 +90,8 @@ export default class Backpax {
       insert.style.position = 'absolute';
       insert.style.top = '0';
       insert.style.left = '0';
-      insert.style.width = '100%';
-      insert.style.height = '100vh';
+      insert.style.right = '0';
+      insert.style.bottom = '0';
       insert.style.backgroundRepeat = 'no-repeat';
       insert.style.backgroundPosition = 'bottom center';
       insert.style.backgroundSize = 'cover';
@@ -104,7 +108,13 @@ export default class Backpax {
       const id = element.dataset.id as string;
       const insert = document.getElementById(id);
       if (insert) {
-        insert.style.height = `${window.innerWidth / ratio}px`;
+        if (element.offsetHeight > element.offsetWidth / ratio) {
+          insert.style.height = element.style.height;
+          insert.style.width = `${element.offsetHeight * ratio}px`;
+        } else {
+          insert.style.height = `${element.offsetWidth / ratio}px`;
+          insert.style.width = '100%';
+        }
       }
     }
     img.src = image;
@@ -149,8 +159,10 @@ export default class Backpax {
       }
       this.move = move;
     });
-    if (window.requestAnimationFrame) {
-      requestAnimationFrame(this.run.bind(this));
+    if ("requestAnimationFrame" in window) {
+      requestAnimationFrame(() => {
+        this.run();
+      });
     }
   }
 }
