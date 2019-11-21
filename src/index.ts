@@ -4,6 +4,11 @@ type Option = {
   speed: "auto" | number
 }
 
+type Control = {
+  ratio: number;
+  speed: number;
+}
+
 const defaults = {
   speed: "auto" //recommend!!
 } as Option;
@@ -11,6 +16,7 @@ const defaults = {
 export default class Backpax {
   elements: NodeList;
   options: Option;
+  controls: Control[];
   move: number;
   constructor(selector: string | NodeList, option = {}) {
     if (selector instanceof NodeList) {
@@ -18,6 +24,7 @@ export default class Backpax {
     } else {
       this.elements = document.querySelectorAll(selector);
     }
+    this.controls = [];
     this.options = Object.assign({}, defaults, option);
     this.move = 0;
     this.setup();
@@ -28,18 +35,18 @@ export default class Backpax {
     }
 
     window.addEventListener('resize', debounce(() => {
-      [].forEach.call(this.elements, (element: HTMLElement) => {
+      [].forEach.call(this.elements, (element: HTMLElement, index) => {
         const { id } = element.dataset;
         if (id) {
           const insert = document.getElementById(id);
           if (insert) {
-            this.setBestImg(element, insert);
+            this.setBestImg(element, insert, index);
           }
         }
       });
     }, 100));
   }
-  setBestImg(element: HTMLElement, insert: HTMLElement) {
+  setBestImg(element: HTMLElement, insert: HTMLElement, index: number) {
     const width = window.innerWidth;
     const img = element.dataset.img as string;
     let backgroundImage = img;
@@ -75,17 +82,17 @@ export default class Backpax {
     if (newBackground !== insert.style.backgroundImage) {
       insert.style.backgroundImage = newBackground;
     }
-    this.setImgRatio(element, backgroundImage);
+    this.setImgRatio(element, backgroundImage, index);
   }
   setup() {
-    [].forEach.call(this.elements, (element: HTMLElement) => {
+    [].forEach.call(this.elements, (element: HTMLElement, index: number) => {
       element.style.position = 'relative';
       element.style.overflow = 'hidden';
       const id = getRandomId();
       element.dataset.id = id;
       const insert = document.createElement('div');
       element.insertBefore(insert, null);
-      this.setBestImg(element, insert);
+      this.setBestImg(element, insert, index);
       insert.id = id;
       insert.style.position = 'absolute';
       insert.style.top = '0';
@@ -100,11 +107,19 @@ export default class Backpax {
       insert.style.willChange = 'transform';
     });
   }
-  setImgRatio(element: HTMLElement, image: string) {
+  setImgRatio(element: HTMLElement, image: string, index: number) {
     const img = new Image();
     img.onload = () => {
       const ratio = img.width / img.height;
-      element.dataset.ratio = `${ratio}`;
+      const control = this.controls[index];
+      if (control) {
+        control.ratio = ratio;
+      } else {
+        this.controls[index] = {
+          ratio,
+          speed: parseInt(element.dataset.speed as string, 10)
+        }
+      }
       const id = element.dataset.id as string;
       const insert = document.getElementById(id);
       if (insert) {
@@ -121,7 +136,7 @@ export default class Backpax {
   }
   run() {
     const top = getScrollTop();
-    [].forEach.call(this.elements, (element: HTMLElement) => {
+    [].forEach.call(this.elements, (element: HTMLElement, index) => {
       const id = element.dataset.id as string;
       const insert = document.getElementById(id);
       const elementOffset = getOffset(element);
@@ -132,7 +147,10 @@ export default class Backpax {
         return;
       }
       const offset = elementOffset.top;
-      const ratio = parseFloat(element.dataset.ratio as string);
+      if (!this.controls[index] || !this.controls[index].ratio) {
+        return;
+      }
+      const ratio = this.controls[index].ratio;
       const windowHeight = window.innerHeight;
       const elementHeight = element.offsetHeight;
       const insertHeight = insert.offsetHeight;
@@ -150,8 +168,8 @@ export default class Backpax {
         }
       }
       
-      if (element.dataset.speed) {
-        speed = parseInt(element.dataset.speed, 10);
+      if (this.controls[index] && this.controls[index].speed) {
+        speed = this.controls[index].speed;
       }
       const final = bottom + (move * speed);
       if (move !== this.move) {
