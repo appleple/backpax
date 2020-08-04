@@ -11,7 +11,7 @@ $ npm install backpax --save
 
 ## Demo
 
-demo page is [here](https://appleple.github.io/backpax)
+Demo page is [here](https://appleple.github.io/backpax)
 
 ## Usage
 
@@ -23,7 +23,7 @@ If you want to add parallax effect to element's background-image
   data-img-768="./path/to/image-which-size-is-smaller-than-768"
   data-img-1024="./path/to/image-which-size-is-smaller-than-1024"
 >
-  <p>テスト</p>
+  <p>Hello world!</p>
 </div>
 ```
 
