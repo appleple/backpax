@@ -29,7 +29,7 @@ export const debounce = (func: () => void, wait: number, immediate: boolean = fa
 		};
 		const callNow = immediate && !timeout;
 		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
+		timeout = window.setTimeout(later, wait);
 		if (callNow) {
       func();
     }
