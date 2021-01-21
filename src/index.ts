@@ -1,4 +1,4 @@
-import { getRandomId, getScrollTop, getOffset, debounce } from './util';
+import {getRandomId, getScrollTop, getOffset, debounce} from './util';
 
 const assign = require('es6-object-assign').assign;
 const find = require('array.prototype.find').shim();
@@ -12,6 +12,11 @@ type Control = {
   speed: number;
 }
 
+type Item = {
+  element: HTMLElement;
+  insert: HTMLElement;
+}
+
 const defaults = {
   speed: "auto" //recommend!!
 } as Option;
@@ -21,6 +26,9 @@ export default class Backpax {
   options: Option;
   controls: Control[];
   move: number;
+  items: Item[];
+  ticking: boolean;
+
   constructor(selector: string | NodeList, option = {}) {
     if (selector instanceof NodeList) {
       this.elements = selector;
@@ -28,18 +36,21 @@ export default class Backpax {
       this.elements = document.querySelectorAll(selector);
     }
     this.controls = [];
+    this.items = [];
     this.options = assign({}, defaults, option);
     this.move = 0;
+    this.ticking = false;
     this.setup();
+
     if ("requestAnimationFrame" in window) {
-      requestAnimationFrame(() => {
+      document.addEventListener('scroll', () => {
         this.run();
-      });
+      }, { passive: true });
     }
 
     window.addEventListener('resize', debounce(() => {
       [].forEach.call(this.elements, (element: HTMLElement, index) => {
-        const { id } = element.dataset;
+        const {id} = element.dataset;
         if (id) {
           const insert = document.getElementById(id);
           if (insert) {
@@ -49,11 +60,12 @@ export default class Backpax {
       });
     }, 100));
   }
+
   setBestImg(element: HTMLElement, insert: HTMLElement, index: number) {
     const width = window.innerWidth;
     const img = element.dataset.img as string;
     let backgroundImage = img;
-    const points = Object.keys(element.dataset).reduce<{point: number, src: string}[]>((ac, key) => {
+    const points = Object.keys(element.dataset).reduce<{ point: number, src: string }[]>((ac, key) => {
       if (/img-\d*/.test(key)) {
         const match = key.match(/img-(\d*)/);
         if (match && match[1]) {
@@ -65,7 +77,7 @@ export default class Backpax {
         }
       }
       return ac;
-    },[]);
+    }, []);
     points.sort((pointA, pointB) => {
       if (pointA.point < pointB.point) {
         return -1;
@@ -87,6 +99,7 @@ export default class Backpax {
     }
     this.setImgRatio(element, backgroundImage, index);
   }
+
   setup() {
     [].forEach.call(this.elements, (element: HTMLElement, index: number) => {
       element.style.position = 'relative';
@@ -108,8 +121,14 @@ export default class Backpax {
       insert.style.transformStyle = 'preserve-3d';
       insert.style.backfaceVisibility = 'hidden';
       insert.style.willChange = 'transform';
+
+      this.items.push({
+        element,
+        insert
+      })
     });
   }
+
   setImgRatio(element: HTMLElement, image: string, index: number) {
     const img = new Image();
     img.onload = () => {
@@ -134,56 +153,59 @@ export default class Backpax {
           insert.style.width = '100%';
         }
       }
-    }
+    };
     img.src = image;
   }
+
   run() {
-    const top = getScrollTop();
-    [].forEach.call(this.elements, (element: HTMLElement, index) => {
-      const id = element.dataset.id as string;
-      const insert = document.getElementById(id);
-      const elementOffset = getOffset(element);
-      if (!insert) {
-        return;
-      }
-      if (!elementOffset) {
-        return;
-      }
-      const offset = elementOffset.top;
-      if (!this.controls[index] || !this.controls[index].ratio) {
-        return;
-      }
-      const ratio = this.controls[index].ratio;
-      const windowHeight = window.innerHeight;
-      const elementHeight = element.offsetHeight;
-      const insertHeight = insert.offsetHeight;
-      if (top + windowHeight < offset) {
-        return;
-      }
-      const move = top + windowHeight - offset;
-      const bottom = elementHeight - insertHeight;
-      let speed = this.options.speed;
-      if (speed === 'auto') {
-        if (ratio) {
-          speed = (insertHeight - elementHeight) / (windowHeight + (elementHeight / 2));
-        } else {
+    if (this.ticking) {
+      return;
+    }
+    requestAnimationFrame(() => {
+      this.ticking = false;
+
+      const top = getScrollTop();
+
+      [].forEach.call(this.items, (item: Item, index: number) => {
+        const element = item.element;
+        const insert = item.insert;
+        const elementOffset = getOffset(element);
+
+        if (!elementOffset) {
           return;
         }
-      }
+        const offset = elementOffset.top;
+        if (!this.controls[index] || !this.controls[index].ratio) {
+          return;
+        }
+        const ratio = this.controls[index].ratio;
+        const windowHeight = window.innerHeight;
+        const elementHeight = element.offsetHeight;
+        const insertHeight = insert.offsetHeight;
+        if (top + windowHeight < offset) {
+          return;
+        }
+        const move = top + windowHeight - offset;
+        const bottom = elementHeight - insertHeight;
+        let speed = this.options.speed;
+        if (speed === 'auto') {
+          if (ratio) {
+            speed = (insertHeight - elementHeight) / (windowHeight + (elementHeight / 2));
+          } else {
+            return;
+          }
+        }
 
-      if (this.controls[index] && this.controls[index].speed) {
-        speed = this.controls[index].speed;
-      }
-      const final = bottom + (move * speed);
-      if (move !== this.move) {
-        insert.style.transform = `translate3d(0px, ${Math.round(final)}px, 0px)`;
-      }
-      this.move = move;
-    });
-    if ("requestAnimationFrame" in window) {
-      requestAnimationFrame(() => {
-        this.run();
+        if (this.controls[index] && this.controls[index].speed) {
+          speed = this.controls[index].speed;
+        }
+        const final = bottom + (move * speed);
+        if (move !== this.move) {
+            insert.style.transform = `translate3d(0px, ${Math.round(final)}px, 0px)`;
+        }
+        this.move = move;
       });
-    }
+    });
+    this.ticking = true;
   }
 }
