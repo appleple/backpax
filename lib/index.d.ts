@@ -17,7 +17,6 @@ export default class Backpax {
     controls: Control[];
     move: number;
     items: Item[];
-    ticking: boolean;
     constructor(selector: string | NodeList, option?: {});
     setBestImg(element: HTMLElement, insert: HTMLElement, index: number): void;
     setup(): void;

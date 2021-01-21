@@ -1,4 +1,4 @@
-import {getRandomId, getScrollTop, getOffset, debounce} from './util';
+import {getRandomId, getScrollTop, debounce} from './util';
 
 const assign = require('es6-object-assign').assign;
 const find = require('array.prototype.find').shim();
@@ -29,7 +29,6 @@ export default class Backpax {
   controls: Control[];
   move: number;
   items: Item[];
-  ticking: boolean;
 
   constructor(selector: string | NodeList, option = {}) {
     if (selector instanceof NodeList) {
@@ -41,13 +40,12 @@ export default class Backpax {
     this.items = [];
     this.options = assign({}, defaults, option);
     this.move = 0;
-    this.ticking = false;
     this.setup();
 
     if ("requestAnimationFrame" in window) {
-      document.addEventListener('scroll', () => {
+      document.addEventListener('scroll',() => {
         this.run();
-      }, { passive: true });
+      }, {passive: true});
     }
 
     window.addEventListener('resize', debounce(() => {
@@ -122,7 +120,6 @@ export default class Backpax {
       insert.style.backgroundSize = 'cover';
       insert.style.transformStyle = 'flat';
       insert.style.backfaceVisibility = 'hidden';
-      // insert.style.transitionDuration = '900ms';
       insert.style.willChange = 'transform';
 
       this.items.push({
@@ -164,50 +161,45 @@ export default class Backpax {
   }
 
   run() {
-    if (this.ticking) {
-      return;
-    }
-    requestAnimationFrame(() => {
-      this.ticking = false;
+    const top = getScrollTop();
+    const windowHeight = window.innerHeight;
 
-      const top = getScrollTop();
-      const windowHeight = window.innerHeight;
+    [].forEach.call(this.items, (item: Item, index: number) => {
+      const element = item.element;
+      const insert = item.insert;
+      const offset = element.getBoundingClientRect().top + top;
 
-      [].forEach.call(this.items, (item: Item, index: number) => {
-        const element = item.element;
-        const insert = item.insert;
-        const offset = element.getBoundingClientRect().top + top;
-
-        if (!this.controls[index] || !this.controls[index].ratio) {
+      if (!this.controls[index] || !this.controls[index].ratio) {
+        return;
+      }
+      const ratio = this.controls[index].ratio;
+      const elementHeight = item.elementOffsetHeight;
+      const insertHeight = item.insertOffsetHeight;
+      if (top + windowHeight < offset) {
+        return;
+      }
+      const move = top + windowHeight - offset;
+      const bottom = elementHeight - insertHeight;
+      let speed = this.options.speed;
+      if (speed === 'auto') {
+        if (ratio) {
+          speed = (insertHeight - elementHeight) / (windowHeight + (elementHeight / 2));
+        } else {
           return;
         }
-        const ratio = this.controls[index].ratio;
-        const elementHeight = item.elementOffsetHeight;
-        const insertHeight = item.insertOffsetHeight;
-        if (top + windowHeight < offset) {
-          return;
-        }
-        const move = top + windowHeight - offset;
-        const bottom = elementHeight - insertHeight;
-        let speed = this.options.speed;
-        if (speed === 'auto') {
-          if (ratio) {
-            speed = (insertHeight - elementHeight) / (windowHeight + (elementHeight / 2));
-          } else {
-            return;
-          }
-        }
+      }
 
-        if (this.controls[index] && this.controls[index].speed) {
-          speed = this.controls[index].speed;
-        }
-        const final = bottom + (move * speed);
-        if (move !== this.move) {
-            insert.style.transform = `translateY(${Math.round(final)}px)`;
-        }
-        this.move = move;
-      });
+      if (this.controls[index] && this.controls[index].speed) {
+        speed = this.controls[index].speed;
+      }
+      const final = bottom + (move * speed);
+
+      if (move !== this.move) {
+        requestAnimationFrame(() => {
+          insert.style.transform = `translateY(${Math.round(final)}px)`;
+        });
+      }
+      this.move = move;
     });
-    this.ticking = true;
   }
 }
