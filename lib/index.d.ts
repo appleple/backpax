@@ -8,6 +8,8 @@ declare type Control = {
 declare type Item = {
     element: HTMLElement;
     insert: HTMLElement;
+    elementOffsetHeight: number;
+    insertOffsetHeight: number;
 };
 export default class Backpax {
     elements: NodeList;

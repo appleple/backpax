@@ -15,6 +15,8 @@ type Control = {
 type Item = {
   element: HTMLElement;
   insert: HTMLElement;
+  elementOffsetHeight: number;
+  insertOffsetHeight: number
 }
 
 const defaults = {
@@ -118,13 +120,16 @@ export default class Backpax {
       insert.style.backgroundRepeat = 'no-repeat';
       insert.style.backgroundPosition = 'bottom center';
       insert.style.backgroundSize = 'cover';
-      insert.style.transformStyle = 'preserve-3d';
+      insert.style.transformStyle = 'flat';
       insert.style.backfaceVisibility = 'hidden';
+      // insert.style.transitionDuration = '900ms';
       insert.style.willChange = 'transform';
 
       this.items.push({
         element,
-        insert
+        insert,
+        elementOffsetHeight: element.offsetHeight,
+        insertOffsetHeight: 0,
       })
     });
   }
@@ -152,6 +157,7 @@ export default class Backpax {
           insert.style.height = `${element.offsetWidth / ratio}px`;
           insert.style.width = '100%';
         }
+        this.items[index].insertOffsetHeight = insert.offsetHeight;
       }
     };
     img.src = image;
@@ -165,23 +171,19 @@ export default class Backpax {
       this.ticking = false;
 
       const top = getScrollTop();
+      const windowHeight = window.innerHeight;
 
       [].forEach.call(this.items, (item: Item, index: number) => {
         const element = item.element;
         const insert = item.insert;
-        const elementOffset = getOffset(element);
+        const offset = element.getBoundingClientRect().top + top;
 
-        if (!elementOffset) {
-          return;
-        }
-        const offset = elementOffset.top;
         if (!this.controls[index] || !this.controls[index].ratio) {
           return;
         }
         const ratio = this.controls[index].ratio;
-        const windowHeight = window.innerHeight;
-        const elementHeight = element.offsetHeight;
-        const insertHeight = insert.offsetHeight;
+        const elementHeight = item.elementOffsetHeight;
+        const insertHeight = item.insertOffsetHeight;
         if (top + windowHeight < offset) {
           return;
         }
@@ -201,7 +203,7 @@ export default class Backpax {
         }
         const final = bottom + (move * speed);
         if (move !== this.move) {
-            insert.style.transform = `translate3d(0px, ${Math.round(final)}px, 0px)`;
+            insert.style.transform = `translateY(${Math.round(final)}px)`;
         }
         this.move = move;
       });
