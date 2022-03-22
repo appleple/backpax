@@ -214,17 +214,17 @@
 					<p>You can easily start by using CDN.</p>
 					<p>Add the following description in the
 						<code>&lt;head&gt;</code> tag of the web page you want to use Backpax.</p>
-					<pre><code class="html">&lt;script src="https://unpkg.com/backpax@latest/bundle/backpax.js"</code></pre>
+					<pre><code class="html">&lt;script src="https://unpkg.com/backpax@latest/bundle/backpax.js"></code></pre>
 					<p>You can also bundle the library with Browserify/Webpack</p>
 					<pre><code class="shell">npm install backpax --save</code></pre>
 					<pre><code class="javascript">import Backpax from 'backpax'</code></pre>
 					<p>Just replace the <code>style="background-image:url(...)"</code> to <code>data-img="..."</code></p>
-					<pre><code class="html">&lt;div class="js-parallax" 
+					<pre><code class="html">&lt;div class="js-parallax"
   data-img="https://images.unsplash.com/photo-1565275706395-d452122d6cfc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"&gt;
   &lt;p&gt;contents here&lt;/p&gt;
 &lt;/div&gt;</code></pre>
 					<p>Write the following script</p>
-					<pre><code class="js">new Backpax('.js-scrollable');</code></pre>
+					<pre><code class="js">new Backpax('.js-parallax');</code></pre>
 				</div>
 			</section>
 
@@ -240,7 +240,7 @@
 					<h3>breakpoints</h3>
 					<p>You can also set some breakpoints so that you can optimize image size in accordance with the screen size.</p>
 					<p>Add the following description to the target tag.</p>
-					<pre><code class="html">&lt;div class="js-parallax" 
+					<pre><code class="html">&lt;div class="js-parallax"
   data-img="./path/to/default-image"
   data-img-768="./path/to/image-which-size-is-smaller-than-768"
   data-img-1024="./path/to/image-which-size-is-smaller-than-1024"
@@ -248,9 +248,9 @@
   &lt;p&gt;contents here&lt;/p&gt;
 &lt;/div&gt;</code></pre>
 					<p>And write the following script</p>
-					<pre><code class="js">new Backpax('.js-scrollable');</code></pre>
+					<pre><code class="js">new Backpax('.js-parallax');</code></pre>
 					<p>You can also use <code>NodeList</code> instead of string</p>
-					<pre><code class="js">new Backpax(document.querySelectorAll('.js-scrollable'));</code></pre>
+					<pre><code class="js">new Backpax(document.querySelectorAll('.js-parallax'));</code></pre>
 				</div>
 			</section>
 
