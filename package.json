@@ -1,6 +1,6 @@
 {
   "name": "backpax",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Simple JavaScript Library to add parallax image to background-image",
   "main": "lib/index.js",
   "type": "lib/index.d.ts",
