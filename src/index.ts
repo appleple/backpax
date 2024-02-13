@@ -1,7 +1,5 @@
 import {getRandomId, getScrollTop, debounce} from './util';
-
-const assign = require('es6-object-assign').assign;
-const find = require('array.prototype.find').shim();
+import { assign } from 'es6-object-assign';
 
 type Option = {
   speed: "auto" | number
